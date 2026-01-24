@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { Activity, Menu, X } from 'lucide-react'
 import { type PropsWithChildren, useState } from 'react'
+import { cn } from '@/lib/utils'
 import { Button } from '../ui/button'
 import { ModeToggle } from './mode-toggle'
 
@@ -30,9 +31,10 @@ export function Layout({ children }: PropsWithChildren) {
 			</header>
 
 			<aside
-				className={`fixed top-0 left-0 h-full w-80 bg-sidebar shadow-2xl z-50 transition-transform duration-300 ease-in-out flex flex-col ${
-					isOpen ? 'translate-x-0' : '-translate-x-full'
-				}`}
+				className={cn(
+					'fixed top-0 left-0 h-full w-80 bg-sidebar shadow-2xl z-50 transition-transform duration-300 ease-in-out flex flex-col',
+					isOpen ? 'translate-x-0' : '-translate-x-full',
+				)}
 			>
 				<div className="flex items-center justify-between p-4 border-b border-sidebar-border">
 					<h2 className="text-xl font-bold">Stock Market</h2>
@@ -62,7 +64,7 @@ export function Layout({ children }: PropsWithChildren) {
 				</nav>
 			</aside>
 
-			<main className="grow py-8 md:py-10 px-6 md:px-8 max-w-7xl mx-auto">
+			<main className="grow py-8 md:py-10 px-6 md:px-8 w-full max-w-7xl mx-auto">
 				{children}
 			</main>
 		</div>
