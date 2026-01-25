@@ -27,27 +27,26 @@ import {
 } from '@/components/ui/popover'
 import { cn } from '@/lib/utils'
 
-const MAX_ASSETS = 6
+const formateDate = (date: Date) =>
+	format(date, 'dd/MM/y', {
+		locale: ptBR,
+	})
+
 const formSchema = z.object({
-	assets: z
-		.array(z.string())
-		.min(1, 'Selecione pelo menos 1 ativo.')
-		.max(MAX_ASSETS),
+	assets: z.array(z.string()).min(1, 'Selecione pelo menos 1 ativo.'),
 	dateRange: z.object({
 		from: z.date(),
 		to: z.date(),
 	}),
 })
 
-const formateDate = (date: Date) =>
-	format(date, 'dd/MM/y', {
-		locale: ptBR,
-	})
+export type FormValues = z.infer<typeof formSchema>
 
 type StockFormProps = {
 	assets: string[]
+	onSubmit: (formValues: FormValues) => Promise<void>
 }
-export function StockForm({ assets }: StockFormProps) {
+export function StockForm({ assets, onSubmit }: StockFormProps) {
 	const anchor = useComboboxAnchor()
 
 	const form = useForm({
@@ -59,16 +58,12 @@ export function StockForm({ assets }: StockFormProps) {
 			onChange: formSchema,
 		},
 		onSubmit: async ({ value }) => {
-			await new Promise((res) =>
-				setTimeout(() => {
-					res(console.log('Formulário Válido:', value))
-				}, 1000),
-			)
+			await onSubmit(value as FormValues)
 		},
 	})
 
 	return (
-		<div className="max-w-md w-full p-6 space-y-4 border rounded-lg shadow-sm">
+		<div className="max-w-md w-full mx-auto p-6 space-y-4 border rounded-lg shadow-sm animate-in motion-safe:slide-in-from-left duration-500">
 			<h3 className="font-semibold ">Informações para consulta</h3>
 
 			<form
@@ -81,15 +76,11 @@ export function StockForm({ assets }: StockFormProps) {
 			>
 				<form.Field name="assets">
 					{(field) => {
-						const currentValues = field.state.value
-						const isMaxReached = currentValues.length >= MAX_ASSETS
 						const isInvalid =
 							field.state.meta.isTouched && !field.state.meta.isValid
 						return (
 							<Field data-invalid={isInvalid}>
-								<FieldLabel htmlFor={field.name}>
-									Ativos (entre 1 e 6 ativos)
-								</FieldLabel>
+								<FieldLabel htmlFor={field.name}>Ativos</FieldLabel>
 								<Combobox
 									multiple
 									autoHighlight
@@ -124,27 +115,15 @@ export function StockForm({ assets }: StockFormProps) {
 									<ComboboxContent anchor={anchor}>
 										<ComboboxEmpty>Nenhum ativo encontrado.</ComboboxEmpty>
 										<ComboboxList>
-											{(item) => {
-												const isSelected = currentValues.includes(item)
-												const isDisabled = !isSelected && isMaxReached
-												return (
-													<ComboboxItem
-														key={item}
-														value={item}
-														disabled={isDisabled}
-														className={cn(
-															'cursor-pointer',
-															isDisabled &&
-																'opacity-50 cursor-not-allowed text-muted-foreground',
-														)}
-													>
-														{item}
-														{isDisabled && (
-															<span className="text-[10px] ml-2">(Max)</span>
-														)}
-													</ComboboxItem>
-												)
-											}}
+											{(item) => (
+												<ComboboxItem
+													key={item}
+													value={item}
+													className="cursor-pointer"
+												>
+													{item}
+												</ComboboxItem>
+											)}
 										</ComboboxList>
 									</ComboboxContent>
 								</Combobox>
