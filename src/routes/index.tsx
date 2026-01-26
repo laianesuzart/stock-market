@@ -3,6 +3,7 @@ import type { EChartsOption } from 'echarts'
 import { SquareArrowLeft } from 'lucide-react'
 import { useState } from 'react'
 import { LineChart } from '@/components/line-chart'
+import { Loader } from '@/components/loader'
 import { type FormValues, StockForm } from '@/components/stock-form'
 import { StockInfo } from '@/components/stock-info'
 import { Button } from '@/components/ui/button'
@@ -14,6 +15,8 @@ export const Route = createFileRoute('/')({
 	component: App,
 	loader: () => getStockAssets(),
 	staleTime: 30 * 60,
+	pendingComponent: Loader,
+	pendingMs: 300,
 })
 const baseOptions: EChartsOption = {
 	title: {
@@ -24,7 +27,7 @@ const baseOptions: EChartsOption = {
 	},
 	tooltip: {
 		trigger: 'axis',
-        confine: true,
+		confine: true,
 		valueFormatter: (value) => {
 			return addDecimalPadding(Number(value))
 		},
