@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { Activity, Menu, X } from 'lucide-react'
+import { Activity, DollarSign, Menu, X } from 'lucide-react'
 import { type PropsWithChildren, useState } from 'react'
 import { cn } from '@/lib/utils'
 import { Button } from '../ui/button'
@@ -7,6 +7,9 @@ import { ModeToggle } from './mode-toggle'
 
 export function Layout({ children }: PropsWithChildren) {
 	const [isOpen, setIsOpen] = useState(false)
+
+	const activeLinkStyles =
+		'bg-sidebar-primary text-sidebar-primary-foreground hover:bg-primary!'
 
 	return (
 		<div className="min-h-dvh flex flex-col">
@@ -54,12 +57,22 @@ export function Layout({ children }: PropsWithChildren) {
 						onClick={() => setIsOpen(false)}
 						className="flex items-center gap-3 p-3 rounded-lg hover:bg-sidebar-accent transition-colors mb-2"
 						activeProps={{
-							className:
-								'bg-sidebar-primary text-sidebar-primary-foreground hover:bg-primary!',
+							className: activeLinkStyles,
 						}}
 					>
 						<Activity size={20} />
 						<span className="font-medium">Ações</span>
+					</Link>
+					<Link
+						to="/currency"
+						onClick={() => setIsOpen(false)}
+						className="flex items-center gap-3 p-3 rounded-lg hover:bg-sidebar-accent transition-colors mb-2"
+						activeProps={{
+							className: activeLinkStyles,
+						}}
+					>
+						<DollarSign size={20} />
+						<span className="font-medium">Moedas</span>
 					</Link>
 				</nav>
 			</aside>

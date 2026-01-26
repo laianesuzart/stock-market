@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import type { EChartsOption } from 'echarts'
 import { SquareArrowLeft } from 'lucide-react'
 import { useState } from 'react'
+import { ErrorFallback } from '@/components/error-fallback'
 import { LineChart } from '@/components/line-chart'
 import { Loader } from '@/components/loader'
 import { type FormValues, StockForm } from '@/components/stock-form'
@@ -17,6 +18,7 @@ export const Route = createFileRoute('/')({
 	staleTime: 30 * 60,
 	pendingComponent: Loader,
 	pendingMs: 300,
+	errorComponent: ErrorFallback,
 })
 const baseOptions: EChartsOption = {
 	title: {
