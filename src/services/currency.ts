@@ -5,39 +5,40 @@ const mockData: Currency[] = [
 	{
 		code: 'USD',
 		name: 'Dólar',
-		rate: '5.29',
-		pctChange: '0.087',
+		rate: '5.28',
+		pctChange: '-0.172',
+		referenceDatetime: '2026-01-26 19:11:49',
 	},
 	{
 		code: 'EUR',
 		name: 'Euro',
-		rate: '6.20',
-		pctChange: '0.000',
+		rate: '6.27',
+		pctChange: '0.987',
+		referenceDatetime: '2026-01-26 19:07:43',
 	},
 	{
 		code: 'JPY',
 		name: 'Iene',
-		rate: '0.03',
-		pctChange: '0.072',
+		rate: '0.034',
+		pctChange: '0.798',
+		referenceDatetime: '2026-01-26 19:11:49',
 	},
 	{
 		code: 'GBP',
 		name: 'Libra Esterlina',
-		rate: '7.22',
-		pctChange: '-0.000',
+		rate: '7.23',
+		pctChange: '-0.040',
+		referenceDatetime: '2026-01-26 19:12:06',
 	},
 ]
 
-export async function getMajorCurrencies(): Promise<
-	[Currency[], string | null]
-> {
+export async function getMajorCurrencies() {
 	try {
 		const res = await api.get('currency/majors').json<{
 			currencies: Currency[]
 		}>()
-
-		return [res.currencies, null]
+		return res.currencies
 	} catch {
-		return [mockData, 'Dados de 25/01/2026.']
+		return mockData
 	}
 }

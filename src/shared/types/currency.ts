@@ -3,4 +3,5 @@ export type Currency = {
 	name: string
 	rate: string
 	pctChange: string
+	referenceDatetime: string
 }

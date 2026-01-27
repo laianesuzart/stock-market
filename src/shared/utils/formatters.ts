@@ -10,6 +10,7 @@ export function formatCurrency(value: string | number) {
 	const formatter = new Intl.NumberFormat('pt-BR', {
 		style: 'currency',
 		currency: 'BRL',
+		maximumFractionDigits: 3,
 	})
 	return formatter.format(Number(value))
 }
