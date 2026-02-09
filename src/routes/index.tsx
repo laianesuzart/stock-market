@@ -2,8 +2,9 @@ import { useQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import type { EChartsOption } from 'echarts'
 import { SquareArrowLeft } from 'lucide-react'
-import { Activity, useState } from 'react'
+import { Activity, useEffect, useState } from 'react'
 import type { DateRange } from 'react-day-picker'
+import { toast } from 'sonner'
 import { ErrorFallback } from '@/components/error-fallback'
 import { LineChart } from '@/components/line-chart'
 import { Loader } from '@/components/loader'
@@ -63,7 +64,12 @@ function App() {
 	const [period, setPeriod] = useState<DateRange | null>(null)
 	const [selectedTickerType, setSelectedTickerType] = useState('stock')
 
-	const { data: assets, isLoading } = useQuery<string[]>({
+	const {
+		data: assets = [],
+		isLoading,
+		isError,
+		error,
+	} = useQuery<string[]>({
 		queryKey: ['posts', selectedTickerType],
 		queryFn: async () => {
 			const res = await getStockAssets(selectedTickerType)
@@ -71,8 +77,6 @@ function App() {
 		},
 		staleTime: 60 * 60 * 60,
 	})
-
-	if (isLoading || !assets) return <Loader />
 
 	const handleFormSubmit = async (values: FormValues) => {
 		const res = await getStockHistory(values.assets, values.dateRange)
@@ -119,6 +123,16 @@ function App() {
 		setStocks([])
 		setPeriod(null)
 	}
+
+	useEffect(() => {
+		if (isError) {
+			toast.error('Erro ao buscar ativos', {
+				description: error.message,
+			})
+		}
+	}, [isError, error])
+
+	if (isLoading) return <Loader />
 
 	return (
 		<div className="grid gap-6 md:gap-12">

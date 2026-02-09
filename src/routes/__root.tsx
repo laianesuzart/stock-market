@@ -4,6 +4,7 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { Layout } from '@/components/layout'
 import { NotFound } from '@/components/not-found'
 import { ThemeProvider } from '@/components/theme-provider'
+import { Toaster } from '@/components/ui/sonner'
 import { ReactQueryProvider } from '@/lib/react-query'
 
 export const Route = createRootRoute({
@@ -25,6 +26,7 @@ export const Route = createRootRoute({
 						]}
 					/>
 				</ReactQueryProvider>
+				<Toaster position="top-right" />
 			</Layout>
 		</ThemeProvider>
 	),
