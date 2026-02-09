@@ -39,7 +39,7 @@ export function LineChart({ options }: LineChartProps) {
 			notMerge={true}
 			lazyUpdate={true}
 			theme="light_theme"
-			style={{ width: '100%', minHeight: 400 }}
+			style={{ width: '100%', minHeight: 500 }}
 		/>
 	)
 }

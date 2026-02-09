@@ -4,3 +4,5 @@ export type Stock = {
 	logo: string
 	history: number[]
 }
+
+export type TickerType = 'bdr' | 'fund' | 'stock'

@@ -2,7 +2,7 @@ import { useForm } from '@tanstack/react-form'
 import { format, startOfToday, subDays } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { CalendarIcon } from 'lucide-react'
-import * as React from 'react'
+import { Fragment } from 'react'
 import type { DateRange } from 'react-day-picker'
 import { z } from 'zod'
 import { Button } from '@/components/ui/button'
@@ -34,7 +34,10 @@ const formateDate = (date: Date) =>
 	})
 
 const formSchema = z.object({
-	assets: z.array(z.string()).min(1, 'Selecione pelo menos 1 ativo.'),
+	assets: z
+		.array(z.string())
+		.min(1, 'Selecione pelo menos 1 ativo.')
+		.max(8, 'Selecione no máximo 8 ativos.'),
 	dateRange: z.custom<DateRange>().superRefine((val, ctx) => {
 		if (!val?.from) {
 			ctx.addIssue({
@@ -90,7 +93,7 @@ export function StockForm({ assets, onSubmit }: StockFormProps) {
 			>
 				<form.Subscribe selector={(state) => state.isSubmitting}>
 					{(isSubmitting) => (
-						<React.Fragment>
+						<Fragment>
 							<form.Field name="assets">
 								{(field) => {
 									const isInvalid =
@@ -110,7 +113,7 @@ export function StockForm({ assets, onSubmit }: StockFormProps) {
 												<ComboboxChips ref={anchor}>
 													<ComboboxValue>
 														{(values) => (
-															<React.Fragment>
+															<Fragment>
 																{values.map((value: string) => (
 																	<ComboboxChip key={value}>
 																		{value}
@@ -122,7 +125,7 @@ export function StockForm({ assets, onSubmit }: StockFormProps) {
 																	}
 																	aria-invalid={isInvalid}
 																/>
-															</React.Fragment>
+															</Fragment>
 														)}
 													</ComboboxValue>
 												</ComboboxChips>
@@ -133,11 +136,7 @@ export function StockForm({ assets, onSubmit }: StockFormProps) {
 													</ComboboxEmpty>
 													<ComboboxList>
 														{(item) => (
-															<ComboboxItem
-																key={item}
-																value={item}
-																className="cursor-pointer"
-															>
+															<ComboboxItem key={item} value={item}>
 																{item}
 															</ComboboxItem>
 														)}
@@ -225,7 +224,7 @@ export function StockForm({ assets, onSubmit }: StockFormProps) {
 							<Button type="submit" className="w-full" disabled={isSubmitting}>
 								{isSubmitting ? 'Enviando...' : 'Consultar'}
 							</Button>
-						</React.Fragment>
+						</Fragment>
 					)}
 				</form.Subscribe>
 			</form>

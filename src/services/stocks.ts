@@ -3,8 +3,11 @@ import type { DateRange } from 'react-day-picker'
 import type { Stock } from '@/shared/types/stock'
 import { api } from './api'
 
-export async function getStockAssets() {
-	const res = await api.get('quote/tickers').json<{ tickers: string[] }>()
+export async function getStockAssets(type = 'stock') {
+	const res = await api
+		.get(`quote/tickers?type=${type}`)
+		.json<{ tickers: string[] }>()
+
 	return res.tickers
 }
 
