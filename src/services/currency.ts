@@ -1,5 +1,4 @@
 import type { Currency } from '@/shared/types/currency'
-import { api } from './api'
 
 const mockData: Currency[] = [
 	{
@@ -33,12 +32,5 @@ const mockData: Currency[] = [
 ]
 
 export async function getMajorCurrencies() {
-	try {
-		const res = await api.get('currency/majors').json<{
-			currencies: Currency[]
-		}>()
-		return res.currencies
-	} catch {
-		return mockData
-	}
+	return mockData
 }
