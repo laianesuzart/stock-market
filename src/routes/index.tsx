@@ -53,8 +53,7 @@ const baseOptions: EChartsOption = {
 
 const mapTickerType: Record<TickerType, string> = {
 	stock: 'Ações',
-	bdr: 'BDR',
-	fund: 'Fundo de investimento',
+	fund: 'Fundos de investimento',
 }
 
 function App() {

@@ -5,4 +5,4 @@ export type Stock = {
 	history: number[]
 }
 
-export type TickerType = 'bdr' | 'fund' | 'stock'
+export type TickerType = 'fund' | 'stock'
