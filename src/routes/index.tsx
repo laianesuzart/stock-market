@@ -1,13 +1,10 @@
-import { useQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import type { EChartsOption } from 'echarts'
 import { SquareArrowLeft } from 'lucide-react'
-import { Activity, useEffect, useState } from 'react'
+import { Activity, useState } from 'react'
 import type { DateRange } from 'react-day-picker'
-import { toast } from 'sonner'
 import { ErrorFallback } from '@/components/error-fallback'
 import { LineChart } from '@/components/line-chart'
-import { Loader } from '@/components/loader'
 import { type FormValues, StockForm } from '@/components/stock-form'
 import { StockInfo } from '@/components/stock-info'
 import { Button } from '@/components/ui/button'
@@ -21,6 +18,7 @@ import { addDecimalPadding } from '@/shared/utils/formatters'
 
 export const Route = createFileRoute('/')({
 	component: App,
+	loader: () => getStockAssets(),
 	staleTime: 30 * 60,
 	errorComponent: ErrorFallback,
 })
@@ -53,7 +51,6 @@ const baseOptions: EChartsOption = {
 
 const mapTickerType: Record<TickerType, string> = {
 	stock: 'Ações',
-	fund: 'Fundos de investimento',
 }
 
 function App() {
@@ -61,21 +58,8 @@ function App() {
 	const [isChartVisible, setIsChartVisible] = useState(false)
 	const [stocks, setStocks] = useState<Stock[] | []>([])
 	const [period, setPeriod] = useState<DateRange | null>(null)
-	const [selectedTickerType, setSelectedTickerType] = useState('stock')
 
-	const {
-		data: assets = [],
-		isLoading,
-		isError,
-		error,
-	} = useQuery<string[]>({
-		queryKey: ['posts', selectedTickerType],
-		queryFn: async () => {
-			const res = await getStockAssets(selectedTickerType)
-			return res
-		},
-		staleTime: 60 * 60 * 60,
-	})
+	const assets = Route.useLoaderData()
 
 	const handleFormSubmit = async (values: FormValues) => {
 		const res = await getStockHistory(values.assets, values.dateRange)
@@ -123,16 +107,6 @@ function App() {
 		setPeriod(null)
 	}
 
-	useEffect(() => {
-		if (isError) {
-			toast.error('Erro ao buscar ativos', {
-				description: error.message,
-			})
-		}
-	}, [isError, error])
-
-	if (isLoading) return <Loader />
-
 	return (
 		<div className="grid gap-6 md:gap-12">
 			<div>
@@ -151,8 +125,8 @@ function App() {
 					<FieldSet>
 						<FieldLegend>Tipo de ativo:</FieldLegend>
 						<RadioGroup
-							value={selectedTickerType}
-							onValueChange={setSelectedTickerType}
+							disabled
+							defaultValue="stock"
 							className="flex flex-col sm:flex-row sm:gap-6"
 						>
 							{Object.keys(mapTickerType).map((type) => (
